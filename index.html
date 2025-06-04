@@ -416,13 +416,31 @@
     .search-bar button:hover {
       background-color: #45a049;
     }
-    
+     /* Button Animation */
+.animated-button {
+  animation: button-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes button-pulse {
+  50% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  150% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
   </style>
 </head>
 
 <body>
   <header>
-    <div class="search-bar">
+    <div class="search-bar animated-button">
       <input type="text" placeholder="Search..." aria-label="Search" />
       <button type="button" onclick="performSearch()">Search</button>
     </div>
