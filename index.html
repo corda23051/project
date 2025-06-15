@@ -859,9 +859,9 @@ Smart Irrigation Systems: Use sensors and weather data to automate and optimize 
       });
       const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
-const sectionsToSearch = ['about', 'gallery','agriculturist', 'Services','strategy for farming','contact'];
+const sectionsToSearch = ['about', 'gallery', 'Agriculturist', 'Services', 'Farming', 'contact'];
 
-searchButton.addEventListener('click', () => {
+function performSearch() {
     const searchTerm = searchInput.value.trim().toLowerCase();
 
     if (searchTerm === "") {
@@ -875,24 +875,34 @@ searchButton.addEventListener('click', () => {
 
         // Improved text extraction and search
         if (sectionId === 'gallery') {
-            searchText = Array.from(section.querySelectorAll('.card h3, .card img')).map(el => el.textContent || el.alt).join(' ').toLowerCase();
+            searchText = Array.from(section.querySelectorAll('.card')).reduce((acc, card) => {
+                const cardText = [card.querySelector('h3'), card.querySelector('img')].map(el => el ? el.textContent || el.alt : '').join(' ').toLowerCase();
+                return acc + ' ' + cardText; //Concatenate card texts with spaces for better search
+            }, '').trim();
         } else {
             searchText = section.textContent.toLowerCase();
         }
 
-        // Use includes for simpler partial matching (case-insensitive)
         const isMatch = searchText.includes(searchTerm);
 
         // Show/hide sections based on search results
         section.style.display = isMatch ? 'block' : 'none';
 
-        // Provide feedback to the user (optional)
-        if (isMatch) {
-            console.log(`Search term "${searchTerm}" found in section "${sectionId}"`);
+        //Optional:  If the section is a Gallery, handle card visibility individually
+        if (sectionId === 'gallery') {
+            const cards = section.querySelectorAll('.card');
+            cards.forEach(card => {
+                const cardText = [card.querySelector('h3'), card.querySelector('img')].map(el => el ? el.textContent || el.alt : '').join(' ').toLowerCase();
+                card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
+            });
         }
     });
-});
-          
+}
+
+//This event listener remains the same; it is changed to the improved performSearch() function above
+searchButton.addEventListener('click', performSearch);
+
+      
     </script>
 </body>
 
