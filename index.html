@@ -857,6 +857,42 @@ Smart Irrigation Systems: Use sensors and weather data to automate and optimize 
         card.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
         observer.observe(card);
       });
+      const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+const sectionsToSearch = ['about', 'gallery','agriculturist', 'Services','strategy for farming','contact'];
+
+searchButton.addEventListener('click', () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    if (searchTerm === "") {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    sectionsToSearch.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        let searchText = '';
+
+        // Improved text extraction and search
+        if (sectionId === 'gallery') {
+            searchText = Array.from(section.querySelectorAll('.card h3, .card img')).map(el => el.textContent || el.alt).join(' ').toLowerCase();
+        } else {
+            searchText = section.textContent.toLowerCase();
+        }
+
+        // Use includes for simpler partial matching (case-insensitive)
+        const isMatch = searchText.includes(searchTerm);
+
+        // Show/hide sections based on search results
+        section.style.display = isMatch ? 'block' : 'none';
+
+        // Provide feedback to the user (optional)
+        if (isMatch) {
+            console.log(`Search term "${searchTerm}" found in section "${sectionId}"`);
+        }
+    });
+});
+          
     </script>
 </body>
 
