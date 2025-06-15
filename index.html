@@ -451,6 +451,12 @@
     .container p {
       text-align: center;
     }
+    .highlight {
+    border: 2px solid lime; /* Highlight border */
+    background-color: rgba(255, 255, 255, 0.3); /* Light background */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    }
+    
   </style>
 </head>
 
@@ -857,11 +863,11 @@ Smart Irrigation Systems: Use sensors and weather data to automate and optimize 
         card.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
         observer.observe(card);
       });
-      const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const sectionsToSearch = ['about', 'gallery', 'Agriculturist', 'Services', 'Farming', 'contact'];
+      const searchInput = document.querySelector('.search-bar input');
+const searchButton = document.querySelector('.search-bar button');
+const sectionsToSearch = ['about', 'gallery', 'Agriculturist', 'Services', 'contact'];
 
-function performSearch() {
+searchButton.addEventListener('click', () => {
     const searchTerm = searchInput.value.trim().toLowerCase();
 
     if (searchTerm === "") {
@@ -869,39 +875,42 @@ function performSearch() {
         return;
     }
 
+    let found = false; // Flag to check if any section is found
+
     sectionsToSearch.forEach(sectionId => {
         const section = document.getElementById(sectionId);
         let searchText = '';
 
         // Improved text extraction and search
         if (sectionId === 'gallery') {
-            searchText = Array.from(section.querySelectorAll('.card')).reduce((acc, card) => {
-                const cardText = [card.querySelector('h3'), card.querySelector('img')].map(el => el ? el.textContent || el.alt : '').join(' ').toLowerCase();
-                return acc + ' ' + cardText; //Concatenate card texts with spaces for better search
-            }, '').trim();
+            searchText = Array.from(section.querySelectorAll('.card h3, .card img')).map(el => el.textContent || el.alt).join(' ').toLowerCase();
         } else {
             searchText = section.textContent.toLowerCase();
         }
 
+        // Use includes for simpler partial matching (case-insensitive)
         const isMatch = searchText.includes(searchTerm);
 
         // Show/hide sections based on search results
         section.style.display = isMatch ? 'block' : 'none';
 
-        //Optional:  If the section is a Gallery, handle card visibility individually
-        if (sectionId === 'gallery') {
-            const cards = section.querySelectorAll('.card');
-            cards.forEach(card => {
-                const cardText = [card.querySelector('h3'), card.querySelector('img')].map(el => el ? el.textContent || el.alt : '').join(' ').toLowerCase();
-                card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
-            });
+        // If a match is found, navigate to that section
+        if (isMatch) {
+            found = true; // Set found to true
+            section.scrollIntoView({ behavior: 'smooth' }); // Scroll to the section
+            // Optionally, you can add a highlight class here
+            section.classList.add('highlight'); // Add highlight class
+        } else {
+            section.classList.remove('highlight'); // Remove highlight class if not matched
         }
     });
-}
 
-//This event listener remains the same; it is changed to the improved performSearch() function above
-searchButton.addEventListener('click', performSearch);
-
+    // If no section is found, alert the user
+    if (!found) {
+        alert("No results found for: " + searchTerm);
+    }
+});
+      
       
     </script>
 </body>
